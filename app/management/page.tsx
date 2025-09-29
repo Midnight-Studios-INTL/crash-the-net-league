@@ -46,9 +46,9 @@ export default async function ManagementPage() {
 
   const activeBids: Bid[] = bids.slice(0, 2).map(bid => ({
     id: bid.id,
-    playerName: bid.player_name || 'Unknown Player',
+    playerName: 'Player ' + bid.player_id?.substring(0, 8) || 'Unknown Player',
     amount: bid.bid_amount || 0,
-    status: bid.status as 'pending' | 'accepted' | 'rejected'
+    status: bid.status.toLowerCase() as 'pending' | 'accepted' | 'rejected'
   }))
 
   const currentLineup = {
