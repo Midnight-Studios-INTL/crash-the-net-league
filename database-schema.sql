@@ -52,7 +52,7 @@ CREATE TABLE public.carousel_images (
   url text NOT NULL,
   title text NOT NULL,
   subtitle text,
-  order integer NOT NULL DEFAULT 0,
+  "order" integer NOT NULL DEFAULT 0,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT carousel_images_pkey PRIMARY KEY (id)
@@ -70,7 +70,7 @@ CREATE TABLE public.conferences (
 );
 
 CREATE TABLE public.daily_recaps (
-  id integer NOT NULL DEFAULT nextval('daily_recaps_id_seq'::regclass),
+  id serial NOT NULL,
   date date NOT NULL UNIQUE,
   recap_data jsonb NOT NULL CHECK (recap_data ? 'team_recaps'::text AND jsonb_typeof(recap_data -> 'team_recaps'::text) = 'array'::text),
   created_at timestamp with time zone DEFAULT now(),
@@ -86,6 +86,246 @@ CREATE TABLE public.discord_bot_config (
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT discord_bot_config_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.teams (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name text NOT NULL UNIQUE,
+  logo_url text,
+  wins integer DEFAULT 0,
+  losses integer DEFAULT 0,
+  otl integer DEFAULT 0,
+  goals_for integer DEFAULT 0,
+  goals_against integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  season_id integer DEFAULT 1,
+  ea_club_id text,
+  is_active boolean NOT NULL DEFAULT true,
+  powerplay_goals integer DEFAULT 0,
+  powerplay_opportunities integer DEFAULT 0,
+  penalty_kill_goals_against integer DEFAULT 0,
+  penalty_kill_opportunities integer DEFAULT 0,
+  manual_override boolean DEFAULT false,
+  points integer DEFAULT 0,
+  games_played integer DEFAULT 0,
+  total_retained_salary bigint DEFAULT 0,
+  discord_role_id text,
+  conference_id uuid,
+  CONSTRAINT teams_pkey PRIMARY KEY (id),
+  CONSTRAINT teams_conference_id_fkey FOREIGN KEY (conference_id) REFERENCES public.conferences(id)
+);
+
+CREATE TABLE public.users (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  email text NOT NULL UNIQUE,
+  gamer_tag_id text NOT NULL UNIQUE,
+  discord_name text,
+  primary_position text NOT NULL,
+  secondary_position text,
+  console text NOT NULL CHECK (console = ANY (ARRAY['Xbox'::text, 'PS5'::text])),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  is_active boolean DEFAULT true,
+  registration_ip character varying,
+  last_login_ip character varying,
+  last_login_at timestamp with time zone,
+  username character varying,
+  gamer_tag text,
+  twitch_username character varying,
+  twitch_user_id character varying,
+  twitch_access_token text,
+  twitch_refresh_token text,
+  twitch_connected_at timestamp with time zone,
+  is_streaming boolean DEFAULT false,
+  stream_title text,
+  stream_game_name character varying,
+  stream_viewer_count integer DEFAULT 0,
+  stream_started_at timestamp with time zone,
+  twitch_id text,
+  twitch_login text,
+  twitch_display_name text,
+  twitch_profile_image_url text,
+  twitch_connected boolean DEFAULT false,
+  avatar_url text,
+  email_notifications boolean DEFAULT true,
+  game_notifications boolean DEFAULT true,
+  news_notifications boolean DEFAULT true,
+  ban_reason text,
+  ban_expiration timestamp with time zone,
+  is_banned boolean NOT NULL DEFAULT false,
+  discord_id text,
+  CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.matches (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  home_team_id uuid,
+  away_team_id uuid,
+  home_score integer DEFAULT 0,
+  away_score integer DEFAULT 0,
+  match_date timestamp with time zone NOT NULL,
+  status text DEFAULT 'Scheduled'::text CHECK (status = ANY (ARRAY['Scheduled'::text, 'In Progress'::text, 'Completed'::text, 'Cancelled'::text])),
+  ea_match_id text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  period_scores jsonb DEFAULT '[]'::jsonb,
+  has_overtime boolean DEFAULT false,
+  has_shootout boolean DEFAULT false,
+  stats_synced boolean DEFAULT false,
+  season_name text,
+  season_id uuid,
+  overtime boolean DEFAULT false,
+  ea_match_data jsonb,
+  is_manual_import boolean DEFAULT false,
+  server character varying,
+  featured boolean DEFAULT false,
+  CONSTRAINT matches_pkey PRIMARY KEY (id),
+  CONSTRAINT matches_away_team_id_fkey FOREIGN KEY (away_team_id) REFERENCES public.teams(id),
+  CONSTRAINT matches_home_team_id_fkey FOREIGN KEY (home_team_id) REFERENCES public.teams(id)
+);
+
+CREATE TABLE public.elo_players (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  discord_id character varying NOT NULL UNIQUE,
+  discord_username character varying NOT NULL,
+  display_name character varying NOT NULL,
+  position character varying NOT NULL,
+  elo_rating integer NOT NULL DEFAULT 1200,
+  total_matches integer DEFAULT 0,
+  wins integer DEFAULT 0,
+  losses integer DEFAULT 0,
+  draws integer DEFAULT 0,
+  points_earned integer DEFAULT 0,
+  points_lost integer DEFAULT 0,
+  win_streak integer DEFAULT 0,
+  loss_streak integer DEFAULT 0,
+  highest_rating integer DEFAULT 1200,
+  lowest_rating integer DEFAULT 1200,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  last_match_at timestamp with time zone,
+  is_active boolean DEFAULT true,
+  CONSTRAINT elo_players_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.elo_matches (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  match_date timestamp with time zone DEFAULT now(),
+  lobby_id uuid,
+  team1_score integer NOT NULL,
+  team2_score integer NOT NULL,
+  winner_team integer CHECK (winner_team = ANY (ARRAY[1, 2])),
+  match_duration integer,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT elo_matches_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.forum_categories (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name character varying NOT NULL UNIQUE,
+  description text,
+  color character varying DEFAULT '#3B82F6'::character varying,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  admin_only boolean DEFAULT false,
+  CONSTRAINT forum_categories_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.forum_posts (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  title character varying NOT NULL,
+  content text NOT NULL,
+  author_id uuid NOT NULL,
+  category_id uuid,
+  pinned boolean DEFAULT false,
+  locked boolean DEFAULT false,
+  view_count integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  reply_count integer DEFAULT 0,
+  CONSTRAINT forum_posts_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_forum_posts_author FOREIGN KEY (author_id) REFERENCES auth.users(id),
+  CONSTRAINT forum_posts_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.forum_categories(id)
+);
+
+CREATE TABLE public.forum_comments (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  content text NOT NULL,
+  author_id uuid NOT NULL,
+  post_id uuid NOT NULL,
+  parent_id uuid,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT forum_comments_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_forum_comments_author FOREIGN KEY (author_id) REFERENCES auth.users(id),
+  CONSTRAINT forum_comments_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.forum_comments(id),
+  CONSTRAINT forum_comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.forum_posts(id)
+);
+
+CREATE TABLE public.players (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  user_id uuid UNIQUE,
+  team_id uuid,
+  salary integer DEFAULT 0,
+  role text DEFAULT 'Player'::text CHECK (role = ANY (ARRAY['Player'::text, 'GM'::text, 'AGM'::text, 'Owner'::text])),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  retained_salary bigint DEFAULT 0,
+  manually_removed boolean DEFAULT false,
+  manually_removed_at timestamp with time zone,
+  manually_removed_by uuid,
+  status text DEFAULT 'active'::text CHECK (status = ANY (ARRAY['active'::text, 'free_agent'::text, 'waived'::text, 'retired'::text])),
+  CONSTRAINT players_pkey PRIMARY KEY (id),
+  CONSTRAINT players_manually_removed_by_fkey FOREIGN KEY (manually_removed_by) REFERENCES auth.users(id),
+  CONSTRAINT players_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
+  CONSTRAINT players_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+
+CREATE TABLE public.roles (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name character varying NOT NULL UNIQUE,
+  display_name character varying NOT NULL,
+  description text,
+  level integer NOT NULL DEFAULT 0,
+  is_system_role boolean DEFAULT false,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT roles_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.seasons (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name character varying NOT NULL,
+  start_date timestamp with time zone NOT NULL,
+  end_date timestamp with time zone NOT NULL,
+  is_active boolean DEFAULT false,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  season_number integer,
+  number integer,
+  is_playoffs boolean DEFAULT false,
+  playoff_teams uuid[],
+  parent_season_id uuid,
+  CONSTRAINT seasons_pkey PRIMARY KEY (id),
+  CONSTRAINT seasons_parent_season_id_fkey FOREIGN KEY (parent_season_id) REFERENCES public.seasons(id)
+);
+
+CREATE TABLE public.waivers (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  player_id uuid NOT NULL,
+  waiving_team_id uuid NOT NULL,
+  waived_at timestamp with time zone DEFAULT now(),
+  claim_deadline timestamp with time zone NOT NULL,
+  status character varying DEFAULT 'active'::character varying CHECK (status::text = ANY (ARRAY['active'::character varying::text, 'claimed'::character varying::text, 'cleared'::character varying::text, 'cancelled'::character varying::text])),
+  winning_team_id uuid,
+  processed_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT waivers_pkey PRIMARY KEY (id),
+  CONSTRAINT waivers_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.players(id),
+  CONSTRAINT waivers_waiving_team_id_fkey FOREIGN KEY (waiving_team_id) REFERENCES public.teams(id),
+  CONSTRAINT waivers_winning_team_id_fkey FOREIGN KEY (winning_team_id) REFERENCES public.teams(id)
 );
 
 CREATE TABLE public.discord_team_roles (
@@ -280,41 +520,7 @@ CREATE TABLE public.elo_match_players (
   CONSTRAINT elo_match_players_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.elo_players(id)
 );
 
-CREATE TABLE public.elo_matches (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  match_date timestamp with time zone DEFAULT now(),
-  lobby_id uuid,
-  team1_score integer NOT NULL,
-  team2_score integer NOT NULL,
-  winner_team integer CHECK (winner_team = ANY (ARRAY[1, 2])),
-  match_duration integer,
-  created_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT elo_matches_pkey PRIMARY KEY (id)
-);
 
-CREATE TABLE public.elo_players (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  discord_id character varying NOT NULL UNIQUE,
-  discord_username character varying NOT NULL,
-  display_name character varying NOT NULL,
-  position character varying NOT NULL,
-  elo_rating integer NOT NULL DEFAULT 1200,
-  total_matches integer DEFAULT 0,
-  wins integer DEFAULT 0,
-  losses integer DEFAULT 0,
-  draws integer DEFAULT 0,
-  points_earned integer DEFAULT 0,
-  points_lost integer DEFAULT 0,
-  win_streak integer DEFAULT 0,
-  loss_streak integer DEFAULT 0,
-  highest_rating integer DEFAULT 1200,
-  lowest_rating integer DEFAULT 1200,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  last_match_at timestamp with time zone,
-  is_active boolean DEFAULT true,
-  CONSTRAINT elo_players_pkey PRIMARY KEY (id)
-);
 
 CREATE TABLE public.elo_settings (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -325,47 +531,6 @@ CREATE TABLE public.elo_settings (
   CONSTRAINT elo_settings_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE public.forum_categories (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  name character varying NOT NULL UNIQUE,
-  description text,
-  color character varying DEFAULT '#3B82F6'::character varying,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  admin_only boolean DEFAULT false,
-  CONSTRAINT forum_categories_pkey PRIMARY KEY (id)
-);
-
-CREATE TABLE public.forum_comments (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  content text NOT NULL,
-  author_id uuid NOT NULL,
-  post_id uuid NOT NULL,
-  parent_id uuid,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT forum_comments_pkey PRIMARY KEY (id),
-  CONSTRAINT fk_forum_comments_author FOREIGN KEY (author_id) REFERENCES auth.users(id),
-  CONSTRAINT forum_comments_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.forum_comments(id),
-  CONSTRAINT forum_comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.forum_posts(id)
-);
-
-CREATE TABLE public.forum_posts (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  title character varying NOT NULL,
-  content text NOT NULL,
-  author_id uuid NOT NULL,
-  category_id uuid,
-  pinned boolean DEFAULT false,
-  locked boolean DEFAULT false,
-  view_count integer DEFAULT 0,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  reply_count integer DEFAULT 0,
-  CONSTRAINT forum_posts_pkey PRIMARY KEY (id),
-  CONSTRAINT fk_forum_posts_author FOREIGN KEY (author_id) REFERENCES auth.users(id),
-  CONSTRAINT forum_posts_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.forum_categories(id)
-);
 
 CREATE TABLE public.game_availability (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -415,32 +580,6 @@ CREATE TABLE public.lineups (
   CONSTRAINT lineups_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id)
 );
 
-CREATE TABLE public.matches (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  home_team_id uuid,
-  away_team_id uuid,
-  home_score integer DEFAULT 0,
-  away_score integer DEFAULT 0,
-  match_date timestamp with time zone NOT NULL,
-  status text DEFAULT 'Scheduled'::text CHECK (status = ANY (ARRAY['Scheduled'::text, 'In Progress'::text, 'Completed'::text, 'Cancelled'::text])),
-  ea_match_id text,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  period_scores jsonb DEFAULT '[]'::jsonb,
-  has_overtime boolean DEFAULT false,
-  has_shootout boolean DEFAULT false,
-  stats_synced boolean DEFAULT false,
-  season_name text,
-  season_id uuid,
-  overtime boolean DEFAULT false,
-  ea_match_data jsonb,
-  is_manual_import boolean DEFAULT false,
-  server character varying,
-  featured boolean DEFAULT false,
-  CONSTRAINT matches_pkey PRIMARY KEY (id),
-  CONSTRAINT matches_away_team_id_fkey FOREIGN KEY (away_team_id) REFERENCES public.teams(id),
-  CONSTRAINT matches_home_team_id_fkey FOREIGN KEY (home_team_id) REFERENCES public.teams(id)
-);
 
 CREATE TABLE public.news (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -532,24 +671,6 @@ CREATE TABLE public.player_transfers (
   CONSTRAINT player_transfers_to_team_id_fkey FOREIGN KEY (to_team_id) REFERENCES public.teams(id)
 );
 
-CREATE TABLE public.players (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  user_id uuid UNIQUE,
-  team_id uuid,
-  salary integer DEFAULT 0,
-  role text DEFAULT 'Player'::text CHECK (role = ANY (ARRAY['Player'::text, 'GM'::text, 'AGM'::text, 'Owner'::text])),
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  retained_salary bigint DEFAULT 0,
-  manually_removed boolean DEFAULT false,
-  manually_removed_at timestamp with time zone,
-  manually_removed_by uuid,
-  status text DEFAULT 'active'::text CHECK (status = ANY (ARRAY['active'::text, 'free_agent'::text, 'waived'::text, 'retired'::text])),
-  CONSTRAINT players_pkey PRIMARY KEY (id),
-  CONSTRAINT players_manually_removed_by_fkey FOREIGN KEY (manually_removed_by) REFERENCES auth.users(id),
-  CONSTRAINT players_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
-  CONSTRAINT players_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
-);
 
 CREATE TABLE public.role_permissions (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -561,17 +682,6 @@ CREATE TABLE public.role_permissions (
   CONSTRAINT role_permissions_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id)
 );
 
-CREATE TABLE public.roles (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  name character varying NOT NULL UNIQUE,
-  display_name character varying NOT NULL,
-  description text,
-  level integer NOT NULL DEFAULT 0,
-  is_system_role boolean DEFAULT false,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT roles_pkey PRIMARY KEY (id)
-);
 
 CREATE TABLE public.season_registrations (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -590,22 +700,6 @@ CREATE TABLE public.season_registrations (
   CONSTRAINT season_registrations_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
 
-CREATE TABLE public.seasons (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  name character varying NOT NULL,
-  start_date timestamp with time zone NOT NULL,
-  end_date timestamp with time zone NOT NULL,
-  is_active boolean DEFAULT false,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  season_number integer,
-  number integer,
-  is_playoffs boolean DEFAULT false,
-  playoff_teams ARRAY,
-  parent_season_id uuid,
-  CONSTRAINT seasons_pkey PRIMARY KEY (id),
-  CONSTRAINT seasons_parent_season_id_fkey FOREIGN KEY (parent_season_id) REFERENCES public.seasons(id)
-);
 
 CREATE TABLE public.security_events (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -627,7 +721,7 @@ CREATE TABLE public.security_events (
 );
 
 CREATE TABLE public.system_settings (
-  id integer NOT NULL DEFAULT nextval('system_settings_id_seq'::regclass),
+  id serial NOT NULL,
   key character varying NOT NULL UNIQUE,
   value jsonb NOT NULL,
   created_at timestamp with time zone DEFAULT now(),
@@ -670,34 +764,6 @@ CREATE TABLE public.team_managers (
   CONSTRAINT team_managers_pkey PRIMARY KEY (id),
   CONSTRAINT team_managers_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id),
   CONSTRAINT team_managers_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
-);
-
-CREATE TABLE public.teams (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  name text NOT NULL UNIQUE,
-  logo_url text,
-  wins integer DEFAULT 0,
-  losses integer DEFAULT 0,
-  otl integer DEFAULT 0,
-  goals_for integer DEFAULT 0,
-  goals_against integer DEFAULT 0,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  season_id integer DEFAULT 1,
-  ea_club_id text,
-  is_active boolean NOT NULL DEFAULT true,
-  powerplay_goals integer DEFAULT 0,
-  powerplay_opportunities integer DEFAULT 0,
-  penalty_kill_goals_against integer DEFAULT 0,
-  penalty_kill_opportunities integer DEFAULT 0,
-  manual_override boolean DEFAULT false,
-  points integer DEFAULT 0,
-  games_played integer DEFAULT 0,
-  total_retained_salary bigint DEFAULT 0,
-  discord_role_id text,
-  conference_id uuid,
-  CONSTRAINT teams_pkey PRIMARY KEY (id),
-  CONSTRAINT teams_conference_id_fkey FOREIGN KEY (conference_id) REFERENCES public.conferences(id)
 );
 
 CREATE TABLE public.token_redeemables (
@@ -792,47 +858,6 @@ CREATE TABLE public.user_roles (
   CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
 
-CREATE TABLE public.users (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  email text NOT NULL UNIQUE,
-  gamer_tag_id text NOT NULL UNIQUE,
-  discord_name text,
-  primary_position text NOT NULL,
-  secondary_position text,
-  console text NOT NULL CHECK (console = ANY (ARRAY['Xbox'::text, 'PS5'::text])),
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  is_active boolean DEFAULT true,
-  registration_ip character varying,
-  last_login_ip character varying,
-  last_login_at timestamp with time zone,
-  username character varying,
-  gamer_tag text,
-  twitch_username character varying,
-  twitch_user_id character varying,
-  twitch_access_token text,
-  twitch_refresh_token text,
-  twitch_connected_at timestamp with time zone,
-  is_streaming boolean DEFAULT false,
-  stream_title text,
-  stream_game_name character varying,
-  stream_viewer_count integer DEFAULT 0,
-  stream_started_at timestamp with time zone,
-  twitch_id text,
-  twitch_login text,
-  twitch_display_name text,
-  twitch_profile_image_url text,
-  twitch_connected boolean DEFAULT false,
-  avatar_url text,
-  email_notifications boolean DEFAULT true,
-  game_notifications boolean DEFAULT true,
-  news_notifications boolean DEFAULT true,
-  ban_reason text,
-  ban_expiration timestamp with time zone,
-  is_banned boolean NOT NULL DEFAULT false,
-  discord_id text,
-  CONSTRAINT users_pkey PRIMARY KEY (id)
-);
 
 CREATE TABLE public.verification_tokens (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -870,19 +895,3 @@ CREATE TABLE public.waiver_priority (
   CONSTRAINT waiver_priority_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id)
 );
 
-CREATE TABLE public.waivers (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  player_id uuid NOT NULL,
-  waiving_team_id uuid NOT NULL,
-  waived_at timestamp with time zone DEFAULT now(),
-  claim_deadline timestamp with time zone NOT NULL,
-  status character varying DEFAULT 'active'::character varying CHECK (status::text = ANY (ARRAY['active'::character varying::text, 'claimed'::character varying::text, 'cleared'::character varying::text, 'cancelled'::character varying::text])),
-  winning_team_id uuid,
-  processed_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT waivers_pkey PRIMARY KEY (id),
-  CONSTRAINT waivers_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.players(id),
-  CONSTRAINT waivers_waiving_team_id_fkey FOREIGN KEY (waiving_team_id) REFERENCES public.teams(id),
-  CONSTRAINT waivers_winning_team_id_fkey FOREIGN KEY (winning_team_id) REFERENCES public.teams(id)
-);

@@ -37,14 +37,16 @@ const navigationItems = [
       { name: 'Statistics', href: '/statistics', icon: BarChart3 },
     ]
   },
-  {
-    title: 'Management',
-    items: [
-      { name: 'Free Agency', href: '/free-agency', icon: DollarSign },
-      { name: 'Management', href: '/management', icon: Settings },
-      { name: 'ELO Rankings', href: '/elo/rankings', icon: TrendingUp },
-    ]
-  },
+          {
+            title: 'Management',
+            items: [
+              { name: 'Team Management', href: '/management', icon: Settings },
+              { name: 'Roster', href: '/management/roster', icon: Users },
+              { name: 'Player Bids', href: '/management/bids', icon: DollarSign },
+              { name: 'Set Lineups', href: '/management/lineups', icon: Target },
+              { name: 'Transactions', href: '/management/transactions', icon: TrendingUp },
+            ]
+          },
   {
     title: 'Community',
     items: [
