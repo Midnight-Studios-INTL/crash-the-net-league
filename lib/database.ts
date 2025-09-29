@@ -240,10 +240,7 @@ export async function getForumCategories(): Promise<ForumCategory[]> {
 export async function getForumPosts(categoryId?: string): Promise<ForumPostWithAuthor[]> {
   let query = supabase
     .from('forum_posts')
-    .select(`
-      *,
-      author:users!forum_posts_author_id_fkey(*)
-    `)
+    .select('*')
     .order('pinned', { ascending: false })
     .order('created_at', { ascending: false })
 
@@ -260,10 +257,7 @@ export async function getForumPosts(categoryId?: string): Promise<ForumPostWithA
 export async function getForumPost(id: string): Promise<ForumPostWithAuthor | null> {
   const { data, error } = await supabase
     .from('forum_posts')
-    .select(`
-      *,
-      author:users!forum_posts_author_id_fkey(*)
-    `)
+    .select('*')
     .eq('id', id)
     .limit(1)
 

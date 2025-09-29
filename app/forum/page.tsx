@@ -98,13 +98,11 @@ export default async function ForumPage() {
                             <div className="flex items-center space-x-2">
                               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center">
                                 <span className="text-white text-xs font-bold">
-                                  {post.author?.gamer_tag?.substring(0, 2).toUpperCase() || 
-                                   post.author?.username?.substring(0, 2).toUpperCase() || 
-                                   'U'}
+                                  U
                                 </span>
                               </div>
                               <span className="text-sm">
-                                {post.author?.gamer_tag || post.author?.username || 'Unknown User'}
+                                User {post.author_id?.substring(0, 8) || 'Unknown'}
                               </span>
                             </div>
                           </td>
