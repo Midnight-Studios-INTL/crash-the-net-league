@@ -1,4 +1,3 @@
-import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/footer'
 
 export default function TeamsPage() {
@@ -14,10 +13,8 @@ export default function TeamsPage() {
   ]
 
   return (
-    <div className="flex flex-col h-full">
-      <Header />
-      
-      <main className="flex-1 overflow-y-auto">
+    <>
+      <main>
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-4">Teams</h1>
@@ -62,6 +59,6 @@ export default function TeamsPage() {
       </main>
 
       <Footer />
-    </div>
+    </>
   )
 }

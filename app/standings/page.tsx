@@ -1,4 +1,3 @@
-import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/footer'
 
 export default function StandingsPage() {
@@ -57,7 +56,7 @@ export default function StandingsPage() {
                 <td className="p-3 font-semibold">{index + 1}</td>
                 <td className="p-3">
                   <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-red-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs font-bold">
                         {team.team.split(' ').map((word: string) => word[0]).join('')}
                       </span>
@@ -81,10 +80,9 @@ export default function StandingsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 py-8">
+    <>
+      <main>
+        <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">Standings</h1>
           <p className="text-muted-foreground">
@@ -123,9 +121,10 @@ export default function StandingsPage() {
             </div>
           </div>
         </div>
+        </div>
       </main>
 
       <Footer />
-    </div>
+    </>
   )
 }

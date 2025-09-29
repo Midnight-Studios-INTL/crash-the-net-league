@@ -1,4 +1,3 @@
-import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/footer'
 import { HeroCarousel } from '@/components/hero-carousel'
 import { UpcomingGames } from '@/components/upcoming-games'
@@ -8,8 +7,6 @@ import { NewsCard } from '@/components/news-card'
 export default function HomePage() {
   return (
     <>
-      <Header />
-      
       <main>
         <div className="container mx-auto px-4 py-8">
           {/* Hero Carousel */}
