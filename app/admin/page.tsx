@@ -1,5 +1,5 @@
-import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/footer'
+import Link from 'next/link'
 
 interface AdminUser {
   id: number
@@ -35,8 +35,6 @@ export default function AdminPage() {
 
   return (
     <>
-      <Header />
-      
       <main>
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
@@ -118,18 +116,18 @@ export default function AdminPage() {
             <div className="bg-card border rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-4">Admin Tools</h3>
               <div className="space-y-4">
-                <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
+                <Link href="/admin/league-settings" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
                   <h4 className="font-semibold mb-2">League Settings</h4>
                   <p className="text-sm text-muted-foreground">Configure league rules, seasons, and tournaments</p>
-                </div>
-                <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
+                </Link>
+                <Link href="/admin/user-moderation" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
                   <h4 className="font-semibold mb-2">User Moderation</h4>
                   <p className="text-sm text-muted-foreground">Ban, suspend, or manage user accounts</p>
-                </div>
-                <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
+                </Link>
+                <Link href="/admin/system-logs" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
                   <h4 className="font-semibold mb-2">System Logs</h4>
                   <p className="text-sm text-muted-foreground">View system logs and error reports</p>
-                </div>
+                </Link>
                 <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
                   <h4 className="font-semibold mb-2">Database Management</h4>
                   <p className="text-sm text-muted-foreground">Manage database backups and maintenance</p>

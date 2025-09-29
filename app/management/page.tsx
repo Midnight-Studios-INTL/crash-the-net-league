@@ -1,5 +1,5 @@
-import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/footer'
+import Link from 'next/link'
 
 interface Team {
   id: number
@@ -40,8 +40,6 @@ export default function ManagementPage() {
 
   return (
     <>
-      <Header />
-      
       <main>
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
@@ -147,18 +145,18 @@ export default function ManagementPage() {
           <div className="mt-8 bg-card border rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4">Management Tools</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
+              <Link href="/management/team-settings" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
                 <h4 className="font-semibold mb-2">Team Settings</h4>
                 <p className="text-sm text-muted-foreground">Configure team rosters, lineups, and strategies</p>
-              </div>
-              <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
+              </Link>
+              <Link href="/management/transaction-center" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
                 <h4 className="font-semibold mb-2">Transaction Center</h4>
                 <p className="text-sm text-muted-foreground">Process trades, signings, and roster moves</p>
-              </div>
-              <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
+              </Link>
+              <Link href="/management/league-settings" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
                 <h4 className="font-semibold mb-2">League Settings</h4>
                 <p className="text-sm text-muted-foreground">Manage league rules, schedules, and configurations</p>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
