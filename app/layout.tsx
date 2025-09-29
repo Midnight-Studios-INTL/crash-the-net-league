@@ -27,9 +27,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <MantineProvider>
-            <div className="flex h-screen bg-background">
+            <div className="min-h-screen bg-background">
               {/* Main Content */}
-              <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="mr-64">
                 {children}
               </div>
               

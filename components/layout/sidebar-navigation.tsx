@@ -65,7 +65,7 @@ export function SidebarNavigation() {
   const pathname = usePathname()
 
   return (
-    <div className="w-64 bg-card border-l h-full overflow-y-auto">
+    <div className="w-64 bg-card border-l h-screen fixed right-0 top-0 overflow-y-auto">
       <div className="p-6">
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-foreground">Crash the Net League</h2>

@@ -7,10 +7,10 @@ import { NewsCard } from '@/components/news-card'
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col h-full">
+    <>
       <Header />
       
-      <main className="flex-1 overflow-y-auto">
+      <main>
         <div className="container mx-auto px-4 py-8">
           {/* Hero Carousel */}
           <section className="mb-12">
@@ -42,7 +42,7 @@ export default function HomePage() {
       </main>
 
       <Footer />
-    </div>
+    </>
   )
 }
 
