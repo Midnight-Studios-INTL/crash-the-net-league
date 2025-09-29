@@ -69,7 +69,7 @@ export default function StatisticsPage() {
                       <td className="p-4 text-center font-semibold">{player.goals}</td>
                       <td className="p-4 text-center">{player.assists}</td>
                       <td className="p-4 text-center font-semibold text-primary">{player.points}</td>
-                      <td className={`p-4 text-center font-semibold ${player.plusMinus >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <td className={`p-4 text-center font-semibold ${player.plusMinus >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
                         {player.plusMinus >= 0 ? '+' : ''}{player.plusMinus}
                       </td>
                     </tr>
@@ -111,7 +111,7 @@ export default function StatisticsPage() {
                         </div>
                       </td>
                       <td className="p-4">{goalie.team}</td>
-                      <td className="p-4 text-center font-semibold text-green-600">{goalie.wins}</td>
+                      <td className="p-4 text-center font-semibold text-blue-600">{goalie.wins}</td>
                       <td className="p-4 text-center text-red-600">{goalie.losses}</td>
                       <td className="p-4 text-center">{goalie.gaa}</td>
                       <td className="p-4 text-center font-semibold">{goalie.savePct}</td>

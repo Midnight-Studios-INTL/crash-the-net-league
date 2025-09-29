@@ -27,7 +27,7 @@ export default function TeamsPage() {
             {teams.map((team, index) => (
               <div key={index} className="bg-card border rounded-lg p-6 hover:shadow-md transition-shadow">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-red-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                     <span className="text-white font-bold text-lg">
                       {team.name.split(' ').map(word => word[0]).join('')}
                     </span>

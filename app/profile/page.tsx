@@ -143,7 +143,7 @@ export default function ProfilePage() {
 
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
-                      <div className="text-lg font-semibold text-green-600">+{stats.plusMinus}</div>
+                      <div className="text-lg font-semibold text-blue-600">+{stats.plusMinus}</div>
                       <div className="text-sm text-muted-foreground">Plus/Minus</div>
                     </div>
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
@@ -172,7 +172,7 @@ export default function ProfilePage() {
                 <div className="bg-card border rounded-lg p-6">
                   <h3 className="text-lg font-semibold mb-4">Profile Picture</h3>
                   <div className="text-center">
-                    <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-red-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                       <span className="text-white font-bold text-xl">
                         {userProfile.name.split(' ').map(word => word[0]).join('')}
                       </span>

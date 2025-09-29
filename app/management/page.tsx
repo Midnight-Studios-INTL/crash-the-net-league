@@ -79,9 +79,9 @@ export default function ManagementPage() {
                         <td className="p-3 text-center font-semibold text-primary">{team.points}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            team.status === 'active' ? 'bg-green-100 text-green-800' :
+                            team.status === 'active' ? 'bg-blue-100 text-blue-800' :
                             team.status === 'inactive' ? 'bg-red-100 text-red-800' :
-                            'bg-yellow-100 text-yellow-800'
+                            'bg-blue-100 text-blue-800'
                           }`}>
                             {team.status}
                           </span>
@@ -117,7 +117,7 @@ export default function ManagementPage() {
                         <td className="p-3">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             transaction.type === 'trade' ? 'bg-blue-100 text-blue-800' :
-                            transaction.type === 'signing' ? 'bg-green-100 text-green-800' :
+                            transaction.type === 'signing' ? 'bg-blue-100 text-blue-800' :
                             'bg-red-100 text-red-800'
                           }`}>
                             {transaction.type}
@@ -128,9 +128,9 @@ export default function ManagementPage() {
                         <td className="p-3 text-muted-foreground">{transaction.toTeam}</td>
                         <td className="p-3 text-center">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            transaction.status === 'approved' ? 'bg-green-100 text-green-800' :
+                            transaction.status === 'approved' ? 'bg-blue-100 text-blue-800' :
                             transaction.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                            'bg-yellow-100 text-yellow-800'
+                            'bg-blue-100 text-blue-800'
                           }`}>
                             {transaction.status}
                           </span>

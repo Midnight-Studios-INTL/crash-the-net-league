@@ -88,7 +88,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-green-600">+{userStats.plusMinus}</div>
+                    <div className="text-lg font-semibold text-blue-600">+{userStats.plusMinus}</div>
                     <div className="text-sm text-muted-foreground">Plus/Minus</div>
                   </div>
                   <div className="text-center">
@@ -132,8 +132,8 @@ export default function DashboardPage() {
                   {recentActivity.map((activity, index) => (
                     <div key={index} className="flex items-start space-x-3 p-3 bg-muted/30 rounded-lg">
                       <div className={`w-2 h-2 rounded-full mt-2 ${
-                        activity.type === 'game' ? 'bg-green-500' :
-                        activity.type === 'trade' ? 'bg-blue-500' : 'bg-yellow-500'
+                        activity.type === 'game' ? 'bg-blue-500' :
+                        activity.type === 'trade' ? 'bg-red-500' : 'bg-blue-500'
                       }`}></div>
                       <div className="flex-1">
                         <div className="font-medium">{activity.description}</div>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
               <div className="bg-card border rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4">Team Information</h3>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-red-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                     <span className="text-white font-bold text-lg">TML</span>
                   </div>
                   <div className="font-semibold">{userStats.team}</div>
