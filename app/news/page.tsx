@@ -71,7 +71,7 @@ export default async function NewsPage() {
                     <div className="md:w-2/3 p-6">
                       <div className="flex items-center space-x-2 mb-2">
                         <span className="px-2 py-1 bg-primary/10 text-primary rounded text-sm">
-                          {article.category || 'News'}
+                          News
                         </span>
                         <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-sm">
                           Featured
@@ -127,7 +127,7 @@ export default async function NewsPage() {
                     <div className="p-6">
                       <div className="flex items-center space-x-2 mb-2">
                         <span className="px-2 py-1 bg-primary/10 text-primary rounded text-sm">
-                          {article.category || 'News'}
+                          News
                         </span>
                       </div>
                       <h3 className="text-lg font-semibold mb-2 hover:text-primary cursor-pointer">
