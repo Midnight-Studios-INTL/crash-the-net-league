@@ -86,7 +86,7 @@ export default async function ManagementPage() {
                     <RingProgress
                       sections={[{ value: capSpacePercentage, color: 'blue' }]}
                       label={
-                        <Text color="blue" weight={700} align="center" size="xl">
+                        <Text c="blue" fw={700} ta="center" size="xl">
                           {capSpacePercentage.toFixed(1)}%
                         </Text>
                       }
