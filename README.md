@@ -1,6 +1,19 @@
 # Crash the Net League (CTNL)
 
-A comprehensive hockey league management system built with Next.js, TypeScript, and modern web technologies.
+A comprehensive hockey league management system built with **Next.js 15**, **React 19**, **TypeScript**, and modern web technologies.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Midnight-Studios-INTL/crash-the-net-league)
+
+## 🚀 Quick Start
+
+This is a **Next.js** project. To get started:
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Overview
 
