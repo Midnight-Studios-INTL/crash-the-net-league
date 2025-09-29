@@ -45,8 +45,8 @@ export default async function ForumPage() {
                         <h3 className="text-lg font-semibold mb-2">{category.name}</h3>
                         <p className="text-sm text-muted-foreground mb-3">{category.description || 'No description available'}</p>
                         <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <span>{category.post_count || 0} posts</span>
-                          <span>Last: {category.last_post_at ? formatDate(category.last_post_at) : 'Never'}</span>
+                          <span>0 posts</span>
+                          <span>Last: Never</span>
                         </div>
                       </div>
                     </div>
