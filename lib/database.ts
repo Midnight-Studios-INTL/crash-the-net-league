@@ -48,10 +48,10 @@ export async function getTeam(id: string): Promise<TeamWithConference | null> {
       conference:conferences!teams_conference_id_fkey(*)
     `)
     .eq('id', id)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 // Players
@@ -92,10 +92,10 @@ export async function getPlayer(id: string): Promise<PlayerWithUser | null> {
       user:users(*)
     `)
     .eq('id', id)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 // Matches
@@ -144,10 +144,9 @@ export async function getFeaturedMatch(): Promise<MatchWithTeams | null> {
     .gte('match_date', new Date().toISOString())
     .order('match_date', { ascending: true })
     .limit(1)
-    .single()
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 export async function getMatch(id: string): Promise<MatchWithTeams | null> {
@@ -159,10 +158,10 @@ export async function getMatch(id: string): Promise<MatchWithTeams | null> {
       away_team:teams!matches_away_team_id_fkey(*)
     `)
     .eq('id', id)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 // Standings
@@ -221,10 +220,10 @@ export async function getNewsArticle(id: string): Promise<NewsWithAuthor | null>
       author:users(*)
     `)
     .eq('id', id)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 // Forum
@@ -266,10 +265,10 @@ export async function getForumPost(id: string): Promise<ForumPostWithAuthor | nu
       author:users(*)
     `)
     .eq('id', id)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 export async function getForumComments(postId: string): Promise<ForumComment[]> {
@@ -304,10 +303,10 @@ export async function getEloPlayer(id: string): Promise<EloPlayer | null> {
     .from('elo_players')
     .select('*')
     .eq('id', id)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 // Management/Admin functions
@@ -390,10 +389,10 @@ export async function getTeamStats(teamId: string) {
     .from('teams')
     .select('*')
     .eq('id', teamId)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 export async function getPlayerStats(playerId: string) {
@@ -407,10 +406,10 @@ export async function getPlayerStats(playerId: string) {
       team:teams(*)
     `)
     .eq('id', playerId)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
 
 // User functions
@@ -425,8 +424,8 @@ export async function getUserProfile(userId: string) {
     .from('users')
     .select('*')
     .eq('id', userId)
-    .single()
+    .limit(1)
 
   if (error) throw error
-  return data
+  return data?.[0] || null
 }
