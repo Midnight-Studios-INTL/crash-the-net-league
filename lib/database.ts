@@ -242,7 +242,7 @@ export async function getForumPosts(categoryId?: string): Promise<ForumPostWithA
     .from('forum_posts')
     .select(`
       *,
-      author:users(*)
+      author:users!forum_posts_author_id_fkey(*)
     `)
     .order('pinned', { ascending: false })
     .order('created_at', { ascending: false })
@@ -262,7 +262,7 @@ export async function getForumPost(id: string): Promise<ForumPostWithAuthor | nu
     .from('forum_posts')
     .select(`
       *,
-      author:users(*)
+      author:users!forum_posts_author_id_fkey(*)
     `)
     .eq('id', id)
     .limit(1)
