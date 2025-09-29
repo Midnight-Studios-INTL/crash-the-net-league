@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Button as MantineButton, ButtonProps as MantineButtonProps } from '@mantine/core'
 import { cn } from '@/lib/utils'
 
-interface ButtonProps extends MantineButtonProps {
+interface ButtonProps extends MantineButtonProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
   size?: 'default' | 'sm' | 'lg' | 'icon'
 }
