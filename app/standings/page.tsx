@@ -20,7 +20,18 @@ export default function StandingsPage() {
     { team: 'Calgary Flames', gp: 40, w: 14, l: 26, otl: 0, pts: 28, gf: 95, ga: 150 }
   ]
 
-  const StandingsTable = ({ conference, teams }: { conference: string, teams: any[] }) => (
+  interface Team {
+    team: string
+    gp: number
+    w: number
+    l: number
+    otl: number
+    pts: number
+    gf: number
+    ga: number
+  }
+
+  const StandingsTable = ({ conference, teams }: { conference: string, teams: Team[] }) => (
     <div className="bg-card border rounded-lg overflow-hidden">
       <div className="bg-muted p-4">
         <h3 className="text-xl font-semibold">{conference} Conference</h3>
@@ -48,7 +59,7 @@ export default function StandingsPage() {
                   <div className="flex items-center space-x-2">
                     <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs font-bold">
-                        {team.team.split(' ').map(word => word[0]).join('')}
+                        {team.team.split(' ').map((word: string) => word[0]).join('')}
                       </span>
                     </div>
                     <span className="font-medium">{team.team}</span>
