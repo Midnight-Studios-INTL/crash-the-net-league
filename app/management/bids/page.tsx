@@ -11,13 +11,13 @@ export default async function PlayerBidsPage() {
   // Convert database data to local format
   const activeBids = bids.map(bid => ({
     id: bid.id,
-    player: bid.player_name || 'Unknown Player',
+    player: 'Player ' + bid.player_id?.substring(0, 8) || 'Unknown Player',
     position: 'C', // This would come from player data
     overall: 90, // This would come from player stats
     amount: bid.bid_amount || 0,
-    status: bid.status as 'active' | 'outbid' | 'won' | 'expired',
-    expiresAt: bid.expires_at ? new Date(bid.expires_at).toISOString().split('T')[0] : '2024-01-25',
-    currentLeader: bid.team_name || 'Unknown Team'
+    status: bid.status.toLowerCase() as 'active' | 'outbid' | 'won' | 'expired',
+    expiresAt: bid.bid_expires_at ? new Date(bid.bid_expires_at).toISOString().split('T')[0] : '2024-01-25',
+    currentLeader: 'Team ' + bid.team_id?.substring(0, 8) || 'Unknown Team'
   }))
 
   // Show free agents (players without teams)
