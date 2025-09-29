@@ -31,7 +31,7 @@ export async function getTeams(): Promise<TeamWithConference[]> {
     .from('teams')
     .select(`
       *,
-      conference:conferences(*)
+      conference:conferences!teams_conference_id_fkey(*)
     `)
     .eq('is_active', true)
     .order('points', { ascending: false })
@@ -45,7 +45,7 @@ export async function getTeam(id: string): Promise<TeamWithConference | null> {
     .from('teams')
     .select(`
       *,
-      conference:conferences(*)
+      conference:conferences!teams_conference_id_fkey(*)
     `)
     .eq('id', id)
     .single()
@@ -104,8 +104,8 @@ export async function getMatches(): Promise<MatchWithTeams[]> {
     .from('matches')
     .select(`
       *,
-      home_team:teams(*),
-      away_team:teams(*)
+      home_team:teams!matches_home_team_id_fkey(*),
+      away_team:teams!matches_away_team_id_fkey(*)
     `)
     .order('match_date', { ascending: false })
     .limit(50)
@@ -119,8 +119,8 @@ export async function getUpcomingMatches(): Promise<MatchWithTeams[]> {
     .from('matches')
     .select(`
       *,
-      home_team:teams(*),
-      away_team:teams(*)
+      home_team:teams!matches_home_team_id_fkey(*),
+      away_team:teams!matches_away_team_id_fkey(*)
     `)
     .eq('status', 'Scheduled')
     .gte('match_date', new Date().toISOString())
@@ -136,8 +136,8 @@ export async function getFeaturedMatch(): Promise<MatchWithTeams | null> {
     .from('matches')
     .select(`
       *,
-      home_team:teams(*),
-      away_team:teams(*)
+      home_team:teams!matches_home_team_id_fkey(*),
+      away_team:teams!matches_away_team_id_fkey(*)
     `)
     .eq('featured', true)
     .eq('status', 'Scheduled')
@@ -155,8 +155,8 @@ export async function getMatch(id: string): Promise<MatchWithTeams | null> {
     .from('matches')
     .select(`
       *,
-      home_team:teams(*),
-      away_team:teams(*)
+      home_team:teams!matches_home_team_id_fkey(*),
+      away_team:teams!matches_away_team_id_fkey(*)
     `)
     .eq('id', id)
     .single()
@@ -171,7 +171,7 @@ export async function getStandings(): Promise<TeamWithConference[]> {
     .from('teams')
     .select(`
       *,
-      conference:conferences(*)
+      conference:conferences!teams_conference_id_fkey(*)
     `)
     .eq('is_active', true)
     .order('points', { ascending: false })
