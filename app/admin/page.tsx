@@ -1,262 +1,117 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Footer } from '@/components/footer'
 import Link from 'next/link'
 import {
   Users,
-  Trophy,
-  Calendar,
   Settings,
-  ImageIcon,
   BarChart3,
-  ShieldCheck,
   Newspaper,
   Database,
   GamepadIcon as GameController,
-  Activity,
-  ClipboardList,
   Bot,
-  RefreshCw,
   MessageSquare,
-  Trash2,
   Clock,
   DollarSign,
-  Coins,
-  Crown,
-  Flame,
   Shield,
-  Rocket,
-  Zap,
-  Target,
-  TrendingUp,
-  Award,
-  Medal,
-  Star,
-  ArrowRight,
-  Lock,
   Eye,
-  Cog,
   Wrench,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
+  ImageIcon,
+  RefreshCw,
+  Calendar,
+  Trophy,
 } from "lucide-react"
 
 export default function AdminDashboardPage() {
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    // Simple admin check - in a real app, this would check authentication
+    // For now, we'll simulate admin access
+    const checkAdminAccess = () => {
+      // You can implement proper authentication here
+      // For demo purposes, we'll allow access
+      setIsAdmin(true)
+      setLoading(false)
+    }
+
+    checkAdminAccess()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Shield className="w-16 h-16 mx-auto mb-4 text-red-600" />
+          <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
+          <p className="text-muted-foreground mb-4">You don't have permission to access this page.</p>
+          <Link href="/" className="text-blue-600 hover:underline">Return to Home</Link>
+        </div>
+      </div>
+    )
+  }
+  const adminPages = [
+    { name: 'User Management', href: '/admin/users', icon: Users, description: 'Manage users and permissions' },
+    { name: 'System Settings', href: '/admin/settings', icon: Settings, description: 'Configure system settings' },
+    { name: 'Security Dashboard', href: '/admin/security-dashboard', icon: Eye, description: 'Monitor security' },
+    { name: 'EA Integration', href: '/admin/ea-stats', icon: GameController, description: 'EA Sports integration' },
+    { name: 'Discord Bot', href: '/admin/scs-bot', icon: Bot, description: 'Discord bot configuration' },
+    { name: 'Bidding System', href: '/admin/bidding-recap', icon: DollarSign, description: 'Manage bidding system' },
+    { name: 'News Management', href: '/admin/news', icon: Newspaper, description: 'Manage news articles' },
+    { name: 'Photo Gallery', href: '/admin/photos', icon: ImageIcon, description: 'Manage photo gallery' },
+    { name: 'Forum Moderation', href: '/admin/forum', icon: MessageSquare, description: 'Moderate forum posts' },
+    { name: 'Database Tools', href: '/admin/migrations', icon: Database, description: 'Database management' },
+    { name: 'Debug Tools', href: '/admin/debug', icon: Wrench, description: 'System diagnostics' },
+    { name: 'Daily Recap', href: '/admin/daily-recap', icon: Clock, description: 'Daily system recap' },
+  ]
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-blue-900/20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="hero-title mb-4">Admin Dashboard</h1>
-          <p className="hero-subtitle">
-            Comprehensive system administration and management tools
-          </p>
-          <div className="hero-divider mt-6"></div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="hero-stats-grid mb-12">
-          <div className="hero-card p-6 text-center">
-            <Users className="w-8 h-8 mx-auto mb-3 text-blue-600" />
-            <div className="hero-stat-value">1,247</div>
-            <div className="hero-stat-label">Total Users</div>
-          </div>
-          <div className="hero-card p-6 text-center">
-            <Activity className="w-8 h-8 mx-auto mb-3 text-red-600" />
-            <div className="hero-stat-value">98.5%</div>
-            <div className="hero-stat-label">Uptime</div>
-          </div>
-          <div className="hero-card p-6 text-center">
-            <Database className="w-8 h-8 mx-auto mb-3 text-blue-600" />
-            <div className="hero-stat-value">45ms</div>
-            <div className="hero-stat-label">DB Response</div>
-          </div>
-          <div className="hero-card p-6 text-center">
-            <Shield className="w-8 h-8 mx-auto mb-3 text-red-600" />
-            <div className="hero-stat-value">Secure</div>
-            <div className="hero-stat-label">System Status</div>
-          </div>
-        </div>
-
-        {/* Admin Tools Grid */}
-        <div className="hero-grid mb-12">
-          {/* User Management */}
-          <div className="hero-feature-card group">
-            <div className="hero-feature-icon">
-              <Users className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="hero-feature-title">User Management</h3>
-            <p className="hero-feature-description mb-6">
-              Manage user accounts, roles, and permissions
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <h1 className="hero-title mb-4">Admin Dashboard</h1>
+            <p className="hero-subtitle">
+              Select an admin tool to manage the system
             </p>
-            <div className="space-y-2">
-              <Link href="/admin/users" className="block w-full">
-                <button className="hero-button w-full">Manage Users</button>
-              </Link>
-              <Link href="/admin/banned-users" className="block w-full">
-                <button className="hero-button-secondary w-full">Banned Users</button>
-              </Link>
-            </div>
+            <div className="hero-divider mt-6"></div>
           </div>
 
-          {/* System Administration */}
-          <div className="hero-feature-card group">
-            <div className="hero-feature-icon">
-              <Settings className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="hero-feature-title">System Settings</h3>
-            <p className="hero-feature-description mb-6">
-              Configure system settings and preferences
-            </p>
-            <div className="space-y-2">
-              <Link href="/admin/settings" className="block w-full">
-                <button className="hero-button w-full">System Settings</button>
-              </Link>
-              <Link href="/admin/security-dashboard" className="block w-full">
-                <button className="hero-button-secondary w-full">Security</button>
-              </Link>
-            </div>
-          </div>
-
-          {/* EA Sports Integration */}
-          <div className="hero-feature-card group">
-            <div className="hero-feature-icon">
-              <GameController className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="hero-feature-title">EA Integration</h3>
-            <p className="hero-feature-description mb-6">
-              Manage EA Sports data and player statistics
-            </p>
-            <div className="space-y-2">
-              <Link href="/admin/ea-stats" className="block w-full">
-                <button className="hero-button w-full">EA Stats</button>
-              </Link>
-              <Link href="/admin/player-mappings" className="block w-full">
-                <button className="hero-button-secondary w-full">Player Mappings</button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Discord Integration */}
-          <div className="hero-feature-card group">
-            <div className="hero-feature-icon">
-              <Bot className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="hero-feature-title">Discord Bot</h3>
-            <p className="hero-feature-description mb-6">
-              Configure Discord integration and bot settings
-            </p>
-            <div className="space-y-2">
-              <Link href="/admin/scs-bot" className="block w-full">
-                <button className="hero-button w-full">Bot Config</button>
-              </Link>
-              <Link href="/admin/discord-debug" className="block w-full">
-                <button className="hero-button-secondary w-full">Debug</button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Bidding System */}
-          <div className="hero-feature-card group">
-            <div className="hero-feature-icon">
-              <DollarSign className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="hero-feature-title">Bidding System</h3>
-            <p className="hero-feature-description mb-6">
-              Manage player bidding and auction system
-            </p>
-            <div className="space-y-2">
-              <Link href="/admin/bidding-recap" className="block w-full">
-                <button className="hero-button w-full">Bidding Recap</button>
-              </Link>
-              <Link href="/admin/fix-bidding-system" className="block w-full">
-                <button className="hero-button-secondary w-full">Fix Issues</button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Content Management */}
-          <div className="hero-feature-card group">
-            <div className="hero-feature-icon">
-              <Newspaper className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="hero-feature-title">Content</h3>
-            <p className="hero-feature-description mb-6">
-              Manage news, photos, and forum content
-            </p>
-            <div className="space-y-2">
-              <Link href="/admin/news" className="block w-full">
-                <button className="hero-button w-full">News</button>
-              </Link>
-              <Link href="/admin/photos" className="block w-full">
-                <button className="hero-button-secondary w-full">Photos</button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Database & System Tools */}
-        <div className="hero-card p-8 mb-8">
-          <h3 className="text-2xl font-bold mb-6 hero-gradient-text">Database & System Tools</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link href="/admin/migrations" className="hero-hover-lift">
-              <div className="p-4 text-center border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400 rounded-lg bg-white dark:bg-slate-800">
-                <Database className="w-8 h-8 mx-auto mb-3 text-blue-600" />
-                <h4 className="font-semibold mb-2">Migrations</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Run database migrations</p>
-              </div>
-            </Link>
-            <Link href="/admin/debug" className="hero-hover-lift">
-              <div className="p-4 text-center border-2 border-red-200 dark:border-red-700 hover:border-red-400 rounded-lg bg-white dark:bg-slate-800">
-                <Wrench className="w-8 h-8 mx-auto mb-3 text-red-600" />
-                <h4 className="font-semibold mb-2">Debug Tools</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">System diagnostics</p>
-              </div>
-            </Link>
-            <Link href="/admin/statistics" className="hero-hover-lift">
-              <div className="p-4 text-center border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400 rounded-lg bg-white dark:bg-slate-800">
-                <BarChart3 className="w-8 h-8 mx-auto mb-3 text-blue-600" />
-                <h4 className="font-semibold mb-2">Statistics</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">System analytics</p>
-              </div>
-            </Link>
-            <Link href="/admin/tokens" className="hero-hover-lift">
-              <div className="p-4 text-center border-2 border-red-200 dark:border-red-700 hover:border-red-400 rounded-lg bg-white dark:bg-slate-800">
-                <Coins className="w-8 h-8 mx-auto mb-3 text-red-600" />
-                <h4 className="font-semibold mb-2">Token System</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Manage tokens</p>
-              </div>
-            </Link>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="hero-card p-8">
-          <h3 className="text-2xl font-bold mb-6 hero-gradient-text">Quick Actions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link href="/admin/sync-ea-stats">
-              <button className="hero-button w-full p-4">
-                <RefreshCw className="w-5 h-5 mr-2" />
-                Sync EA Stats
-              </button>
-            </Link>
-            <Link href="/admin/recalculate-standings">
-              <button className="hero-button w-full p-4">
-                <Trophy className="w-5 h-5 mr-2" />
-                Recalculate Standings
-              </button>
-            </Link>
-            <Link href="/admin/daily-recap">
-              <button className="hero-button w-full p-4">
-                <Calendar className="w-5 h-5 mr-2" />
-                Daily Recap
-              </button>
-            </Link>
+          {/* Admin Pages Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {adminPages.map((page) => {
+              const Icon = page.icon
+              return (
+                <Link key={page.href} href={page.href} className="group">
+                  <div className="hero-card p-6 text-center group-hover:shadow-lg transition-all duration-300">
+                    <Icon className="w-12 h-12 mx-auto mb-4 text-blue-600 group-hover:text-blue-700" />
+                    <h3 className="text-lg font-semibold mb-2 text-slate-800 dark:text-slate-200">
+                      {page.name}
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      {page.description}
+                    </p>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </div>
-    </div>
 
-    <Footer />
+      <Footer />
     </>
   )
 }

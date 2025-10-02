@@ -6,99 +6,34 @@ import { cn } from '@/lib/utils'
 import { 
   Home, 
   Users, 
-  User, 
   Calendar, 
   Trophy, 
   BarChart3, 
-  DollarSign, 
   MessageSquare, 
   Newspaper,
   Settings,
   Shield,
-  Target,
-  TrendingUp,
-  Database,
-  Bot,
-  GamepadIcon as GameController,
   Gavel,
-  Activity,
-  Wrench,
-  Eye,
-  UserCheck,
-  FileText,
-  ImageIcon,
-  Coins,
-  RefreshCw,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  ArrowLeftRight
+  Award,
+  TrendingUp,
+  UserPlus
 } from 'lucide-react'
 
 const navigationItems = [
   {
-    title: 'Overview',
+    title: 'Main Navigation',
     items: [
-      { name: 'Dashboard', href: '/dashboard', icon: Home },
       { name: 'Home', href: '/', icon: Home },
-    ]
-  },
-  {
-    title: 'League',
-    items: [
       { name: 'Teams', href: '/teams', icon: Users },
-      { name: 'Players', href: '/players', icon: User },
-      { name: 'Matches', href: '/matches', icon: Calendar },
       { name: 'Standings', href: '/standings', icon: Trophy },
-      { name: 'Statistics', href: '/statistics', icon: BarChart3 },
+      { name: 'Stats', href: '/statistics', icon: BarChart3 },
+      { name: 'Matches', href: '/matches', icon: Calendar },
+      { name: 'Awards', href: '/awards', icon: Award },
       { name: 'Free Agency', href: '/free-agency', icon: Gavel },
-    ]
-  },
-  {
-    title: 'Team Management',
-    items: [
-      { name: 'Dashboard', href: '/management', icon: Settings },
-      { name: 'Roster', href: '/management/roster', icon: Users },
-      { name: 'Player Bids', href: '/management/bids', icon: DollarSign },
-      { name: 'Set Lineups', href: '/management/lineups', icon: Target },
-      { name: 'Transactions', href: '/management/transactions', icon: ArrowLeftRight },
-      { name: 'Team Settings', href: '/management/team-settings', icon: Settings },
-    ]
-  },
-  {
-    title: 'Community',
-    items: [
-      { name: 'Forum', href: '/forum', icon: MessageSquare },
+      { name: 'ELO', href: '/elo/rankings', icon: TrendingUp },
       { name: 'News', href: '/news', icon: Newspaper },
-      { name: 'Livestream', href: '/livestream', icon: Activity },
-    ]
-  },
-  {
-    title: 'Administration',
-    items: [
-      { name: 'Admin Dashboard', href: '/admin', icon: Shield },
-      { name: 'User Management', href: '/admin/users', icon: UserCheck },
-      { name: 'System Settings', href: '/admin/settings', icon: Settings },
-      { name: 'Security Dashboard', href: '/admin/security-dashboard', icon: Eye },
-    ]
-  },
-  {
-    title: 'Admin Tools',
-    items: [
-      { name: 'EA Integration', href: '/admin/ea-stats', icon: GameController },
-      { name: 'Discord Bot', href: '/admin/scs-bot', icon: Bot },
-      { name: 'Bidding System', href: '/admin/bidding-recap', icon: Gavel },
-      { name: 'Database Tools', href: '/admin/migrations', icon: Database },
-      { name: 'Debug Tools', href: '/admin/debug', icon: Wrench },
-    ]
-  },
-  {
-    title: 'Content Management',
-    items: [
-      { name: 'News Management', href: '/admin/news', icon: Newspaper },
-      { name: 'Photo Gallery', href: '/admin/photos', icon: ImageIcon },
-      { name: 'Forum Moderation', href: '/admin/forum', icon: MessageSquare },
-      { name: 'Daily Recap', href: '/admin/daily-recap', icon: Clock },
+      { name: 'Forum', href: '/forum', icon: MessageSquare },
+      { name: 'Season Registration', href: '/register', icon: UserPlus },
     ]
   }
 ]
