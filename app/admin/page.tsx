@@ -63,18 +63,45 @@ export default function AdminDashboardPage() {
     )
   }
   const adminPages = [
+    // User Management
     { name: 'User Management', href: '/admin/users', icon: Users, description: 'Manage users and permissions' },
+    { name: 'Banned Users', href: '/admin/banned-users', icon: Shield, description: 'View banned users' },
+    { name: 'User Moderation', href: '/admin/user-moderation', icon: Eye, description: 'Moderate user activity' },
+    
+    // System Administration
     { name: 'System Settings', href: '/admin/settings', icon: Settings, description: 'Configure system settings' },
-    { name: 'Security Dashboard', href: '/admin/security-dashboard', icon: Eye, description: 'Monitor security' },
-    { name: 'EA Integration', href: '/admin/ea-stats', icon: GameController, description: 'EA Sports integration' },
-    { name: 'Discord Bot', href: '/admin/scs-bot', icon: Bot, description: 'Discord bot configuration' },
-    { name: 'Bidding System', href: '/admin/bidding-recap', icon: DollarSign, description: 'Manage bidding system' },
+    { name: 'Security Dashboard', href: '/admin/security-dashboard', icon: Shield, description: 'Monitor security' },
+    { name: 'System Logs', href: '/admin/system-logs', icon: Database, description: 'View system logs' },
+    { name: 'League Settings', href: '/admin/league-settings', icon: Settings, description: 'Configure league' },
+    
+    // EA Sports Integration
+    { name: 'EA Stats', href: '/admin/ea-stats', icon: GameController, description: 'EA Sports integration' },
+    { name: 'Player Mappings', href: '/admin/player-mappings', icon: Users, description: 'Map EA players' },
+    { name: 'Sync EA Stats', href: '/admin/sync-ea-stats', icon: RefreshCw, description: 'Sync EA data' },
+    
+    // Discord Integration
+    { name: 'Discord Bot', href: '/admin/scs-bot', icon: Bot, description: 'Discord bot config' },
+    { name: 'Discord Debug', href: '/admin/discord-debug', icon: Wrench, description: 'Debug Discord bot' },
+    
+    // Bidding System
+    { name: 'Bidding Recap', href: '/admin/bidding-recap', icon: DollarSign, description: 'Bidding system recap' },
+    { name: 'Fix Bidding System', href: '/admin/fix-bidding-system', icon: Wrench, description: 'Fix bidding issues' },
+    
+    // Content Management
     { name: 'News Management', href: '/admin/news', icon: Newspaper, description: 'Manage news articles' },
-    { name: 'Photo Gallery', href: '/admin/photos', icon: ImageIcon, description: 'Manage photo gallery' },
-    { name: 'Forum Moderation', href: '/admin/forum', icon: MessageSquare, description: 'Moderate forum posts' },
-    { name: 'Database Tools', href: '/admin/migrations', icon: Database, description: 'Database management' },
+    { name: 'Photo Gallery', href: '/admin/photos', icon: ImageIcon, description: 'Manage photos' },
+    { name: 'Forum Moderation', href: '/admin/forum', icon: MessageSquare, description: 'Moderate forum' },
+    { name: 'Daily Recap', href: '/admin/daily-recap', icon: Clock, description: 'Daily recap' },
+    
+    // Database & System Tools
+    { name: 'Database Migrations', href: '/admin/migrations', icon: Database, description: 'Run migrations' },
     { name: 'Debug Tools', href: '/admin/debug', icon: Wrench, description: 'System diagnostics' },
-    { name: 'Daily Recap', href: '/admin/daily-recap', icon: Clock, description: 'Daily system recap' },
+    { name: 'Statistics', href: '/admin/statistics', icon: BarChart3, description: 'System analytics' },
+    { name: 'Token System', href: '/admin/tokens', icon: DollarSign, description: 'Manage tokens' },
+    
+    // Quick Actions
+    { name: 'Recalculate Standings', href: '/admin/recalculate-standings', icon: Trophy, description: 'Recalc standings' },
+    { name: 'Reset Password', href: '/admin/reset-password', icon: Shield, description: 'Reset user passwords' },
   ]
 
   return (
