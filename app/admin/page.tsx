@@ -1,175 +1,335 @@
-import { Footer } from '@/components/footer'
-import Link from 'next/link'
+"use client"
 
-interface AdminUser {
-  id: number
-  username: string
-  role: 'admin' | 'moderator' | 'user'
-  lastActive: string
-  status: 'active' | 'banned' | 'suspended'
-}
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useToast } from "@/components/ui/use-toast"
+import { useSupabase } from "@/lib/supabase/client"
+import Link from "next/link"
+import {
+  Users,
+  Trophy,
+  Calendar,
+  Settings,
+  ImageIcon,
+  BarChart3,
+  ShieldCheck,
+  Newspaper,
+  Database,
+  GamepadIcon as GameController,
+  Activity,
+  ClipboardList,
+  Bot,
+  RefreshCw,
+  MessageSquare,
+  Trash2,
+  Clock,
+  DollarSign,
+  Coins,
+  Crown,
+  Flame,
+  Shield,
+  Rocket,
+  Zap,
+  Target,
+  TrendingUp,
+  Award,
+  Medal,
+  Star,
+  ArrowRight,
+  Lock,
+  Eye,
+  Cog,
+  Wrench,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+} from "lucide-react"
 
-interface SystemMetric {
-  name: string
-  value: string
-  status: 'good' | 'warning' | 'error'
-}
+export default function AdminDashboardPage() {
+  const { supabase, session } = useSupabase()
+  const { toast } = useToast()
+  const router = useRouter()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-export default function AdminPage() {
-  const users: AdminUser[] = [
-    { id: 1, username: 'admin_user', role: 'admin', lastActive: 'Online', status: 'active' },
-    { id: 2, username: 'moderator_1', role: 'moderator', lastActive: '2 hours ago', status: 'active' },
-    { id: 3, username: 'player_123', role: 'user', lastActive: '1 day ago', status: 'active' },
-    { id: 4, username: 'banned_user', role: 'user', lastActive: '1 week ago', status: 'banned' },
-    { id: 5, username: 'suspended_user', role: 'user', lastActive: '3 days ago', status: 'suspended' }
-  ]
+  useEffect(() => {
+    async function checkAuthorization() {
+      if (!session?.user) {
+        toast({
+          title: "Unauthorized",
+          description: "You must be logged in to access this page.",
+          variant: "destructive",
+        })
+        router.push("/login")
+        return
+      }
 
-  const systemMetrics: SystemMetric[] = [
-    { name: 'Server Status', value: 'Online', status: 'good' },
-    { name: 'Database', value: 'Connected', status: 'good' },
-    { name: 'API Response', value: '45ms', status: 'good' },
-    { name: 'Active Users', value: '1,247', status: 'good' },
-    { name: 'Disk Usage', value: '78%', status: 'warning' },
-    { name: 'Memory Usage', value: '65%', status: 'good' }
-  ]
+      try {
+        const { data: adminRoleData, error: adminRoleError } = await supabase
+          .from("user_roles")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .eq("role", "Admin")
+
+        if (adminRoleError || !adminRoleData || adminRoleData.length === 0) {
+          toast({
+            title: "Access denied",
+            description: "You don't have permission to access the admin dashboard.",
+            variant: "destructive",
+          })
+          router.push("/")
+          return
+        }
+
+        setIsAdmin(true)
+      } catch (error: any) {
+        console.error("Error checking authorization:", error)
+        toast({
+          title: "Error",
+          description: error.message || "An error occurred",
+          variant: "destructive",
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkAuthorization()
+  }, [supabase, session, toast, router])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (!isAdmin) {
+    return null
+  }
 
   return (
-    <>
-      <main>
-        <div className="container mx-auto px-4 py-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Admin Panel</h1>
-            <p className="text-muted-foreground">
-              System administration and user management
-            </p>
-          </div>
-
-          {/* System Metrics */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">System Status</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {systemMetrics.map((metric) => (
-                <div key={metric.name} className="bg-card border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-medium text-muted-foreground">{metric.name}</h3>
-                    <div className={`w-2 h-2 rounded-full ${
-                      metric.status === 'good' ? 'bg-green-500' :
-                      metric.status === 'warning' ? 'bg-yellow-500' :
-                      'bg-red-500'
-                    }`} />
-                  </div>
-                  <p className="text-lg font-semibold">{metric.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* User Management */}
-            <div className="bg-card border rounded-lg overflow-hidden">
-              <div className="bg-muted p-4">
-                <h3 className="text-xl font-semibold">User Management</h3>
-                <p className="text-sm text-muted-foreground">Manage user accounts and permissions</p>
-              </div>
-              
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-muted/50">
-                    <tr>
-                      <th className="text-left p-3 font-semibold">Username</th>
-                      <th className="text-center p-3 font-semibold">Role</th>
-                      <th className="text-center p-3 font-semibold">Last Active</th>
-                      <th className="text-center p-3 font-semibold">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((user) => (
-                      <tr key={user.id} className="border-t hover:bg-muted/30 transition-colors">
-                        <td className="p-3 font-medium">{user.username}</td>
-                        <td className="p-3 text-center">
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            user.role === 'admin' ? 'bg-red-100 text-red-800' :
-                            user.role === 'moderator' ? 'bg-blue-100 text-blue-800' :
-                            'bg-gray-100 text-gray-800'
-                          }`}>
-                            {user.role}
-                          </span>
-                        </td>
-                        <td className="p-3 text-center text-muted-foreground">{user.lastActive}</td>
-                        <td className="p-3 text-center">
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            user.status === 'active' ? 'bg-green-100 text-green-800' :
-                            user.status === 'banned' ? 'bg-red-100 text-red-800' :
-                            'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {user.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Admin Tools */}
-            <div className="bg-card border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">Admin Tools</h3>
-              <div className="space-y-4">
-                <Link href="/admin/league-settings" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
-                  <h4 className="font-semibold mb-2">League Settings</h4>
-                  <p className="text-sm text-muted-foreground">Configure league rules, seasons, and tournaments</p>
-                </Link>
-                <Link href="/admin/user-moderation" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
-                  <h4 className="font-semibold mb-2">User Moderation</h4>
-                  <p className="text-sm text-muted-foreground">Ban, suspend, or manage user accounts</p>
-                </Link>
-                <Link href="/admin/system-logs" className="block p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
-                  <h4 className="font-semibold mb-2">System Logs</h4>
-                  <p className="text-sm text-muted-foreground">View system logs and error reports</p>
-                </Link>
-                <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
-                  <h4 className="font-semibold mb-2">Database Management</h4>
-                  <p className="text-sm text-muted-foreground">Manage database backups and maintenance</p>
-                </div>
-                <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
-                  <h4 className="font-semibold mb-2">Content Moderation</h4>
-                  <p className="text-sm text-muted-foreground">Moderate forum posts and user content</p>
-                </div>
-                <div className="p-4 border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer">
-                  <h4 className="font-semibold mb-2">Analytics</h4>
-                  <p className="text-sm text-muted-foreground">View detailed analytics and reports</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="mt-8 bg-card border rounded-lg p-6">
-            <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <button className="p-4 border rounded-lg hover:bg-muted/30 transition-colors text-left">
-                <h4 className="font-semibold mb-2">Send Announcement</h4>
-                <p className="text-sm text-muted-foreground">Send message to all users</p>
-              </button>
-              <button className="p-4 border rounded-lg hover:bg-muted/30 transition-colors text-left">
-                <h4 className="font-semibold mb-2">Backup Database</h4>
-                <p className="text-sm text-muted-foreground">Create system backup</p>
-              </button>
-              <button className="p-4 border rounded-lg hover:bg-muted/30 transition-colors text-left">
-                <h4 className="font-semibold mb-2">Clear Cache</h4>
-                <p className="text-sm text-muted-foreground">Clear system cache</p>
-              </button>
-              <button className="p-4 border rounded-lg hover:bg-muted/30 transition-colors text-left">
-                <h4 className="font-semibold mb-2">Restart Services</h4>
-                <p className="text-sm text-muted-foreground">Restart system services</p>
-              </button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-blue-900/20">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="hero-title mb-4">Admin Dashboard</h1>
+          <p className="hero-subtitle">
+            Comprehensive system administration and management tools
+          </p>
+          <div className="hero-divider mt-6"></div>
         </div>
-      </main>
 
-      <Footer />
-    </>
+        {/* Quick Stats */}
+        <div className="hero-stats-grid mb-12">
+          <Card className="hero-card">
+            <CardContent className="p-6 text-center">
+              <Users className="w-8 h-8 mx-auto mb-3 text-blue-600" />
+              <div className="hero-stat-value">1,247</div>
+              <div className="hero-stat-label">Total Users</div>
+            </CardContent>
+          </Card>
+          <Card className="hero-card">
+            <CardContent className="p-6 text-center">
+              <Activity className="w-8 h-8 mx-auto mb-3 text-red-600" />
+              <div className="hero-stat-value">98.5%</div>
+              <div className="hero-stat-label">Uptime</div>
+            </CardContent>
+          </Card>
+          <Card className="hero-card">
+            <CardContent className="p-6 text-center">
+              <Database className="w-8 h-8 mx-auto mb-3 text-blue-600" />
+              <div className="hero-stat-value">45ms</div>
+              <div className="hero-stat-label">DB Response</div>
+            </CardContent>
+          </Card>
+          <Card className="hero-card">
+            <CardContent className="p-6 text-center">
+              <Shield className="w-8 h-8 mx-auto mb-3 text-red-600" />
+              <div className="hero-stat-value">Secure</div>
+              <div className="hero-stat-label">System Status</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Admin Tools Grid */}
+        <div className="hero-grid mb-12">
+          {/* User Management */}
+          <Card className="hero-feature-card">
+            <div className="hero-feature-icon">
+              <Users className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="hero-feature-title">User Management</h3>
+            <p className="hero-feature-description mb-6">
+              Manage user accounts, roles, and permissions
+            </p>
+            <div className="space-y-2">
+              <Link href="/admin/users" className="block w-full">
+                <button className="hero-button w-full">Manage Users</button>
+              </Link>
+              <Link href="/admin/banned-users" className="block w-full">
+                <button className="hero-button-secondary w-full">Banned Users</button>
+              </Link>
+            </div>
+          </Card>
+
+          {/* System Administration */}
+          <Card className="hero-feature-card">
+            <div className="hero-feature-icon">
+              <Settings className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="hero-feature-title">System Settings</h3>
+            <p className="hero-feature-description mb-6">
+              Configure system settings and preferences
+            </p>
+            <div className="space-y-2">
+              <Link href="/admin/settings" className="block w-full">
+                <button className="hero-button w-full">System Settings</button>
+              </Link>
+              <Link href="/admin/security-dashboard" className="block w-full">
+                <button className="hero-button-secondary w-full">Security</button>
+              </Link>
+            </div>
+          </Card>
+
+          {/* EA Sports Integration */}
+          <Card className="hero-feature-card">
+            <div className="hero-feature-icon">
+              <GameController className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="hero-feature-title">EA Integration</h3>
+            <p className="hero-feature-description mb-6">
+              Manage EA Sports data and player statistics
+            </p>
+            <div className="space-y-2">
+              <Link href="/admin/ea-stats" className="block w-full">
+                <button className="hero-button w-full">EA Stats</button>
+              </Link>
+              <Link href="/admin/player-mappings" className="block w-full">
+                <button className="hero-button-secondary w-full">Player Mappings</button>
+              </Link>
+            </div>
+          </Card>
+
+          {/* Discord Integration */}
+          <Card className="hero-feature-card">
+            <div className="hero-feature-icon">
+              <Bot className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="hero-feature-title">Discord Bot</h3>
+            <p className="hero-feature-description mb-6">
+              Configure Discord integration and bot settings
+            </p>
+            <div className="space-y-2">
+              <Link href="/admin/scs-bot" className="block w-full">
+                <button className="hero-button w-full">Bot Config</button>
+              </Link>
+              <Link href="/admin/discord-debug" className="block w-full">
+                <button className="hero-button-secondary w-full">Debug</button>
+              </Link>
+            </div>
+          </Card>
+
+          {/* Bidding System */}
+          <Card className="hero-feature-card">
+            <div className="hero-feature-icon">
+              <DollarSign className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="hero-feature-title">Bidding System</h3>
+            <p className="hero-feature-description mb-6">
+              Manage player bidding and auction system
+            </p>
+            <div className="space-y-2">
+              <Link href="/admin/bidding-recap" className="block w-full">
+                <button className="hero-button w-full">Bidding Recap</button>
+              </Link>
+              <Link href="/admin/fix-bidding-system" className="block w-full">
+                <button className="hero-button-secondary w-full">Fix Issues</button>
+              </Link>
+            </div>
+          </Card>
+
+          {/* Content Management */}
+          <Card className="hero-feature-card">
+            <div className="hero-feature-icon">
+              <Newspaper className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="hero-feature-title">Content</h3>
+            <p className="hero-feature-description mb-6">
+              Manage news, photos, and forum content
+            </p>
+            <div className="space-y-2">
+              <Link href="/admin/news" className="block w-full">
+                <button className="hero-button w-full">News</button>
+              </Link>
+              <Link href="/admin/photos" className="block w-full">
+                <button className="hero-button-secondary w-full">Photos</button>
+              </Link>
+            </div>
+          </Card>
+        </div>
+
+        {/* Database & System Tools */}
+        <Card className="hero-card p-8 mb-8">
+          <h3 className="text-2xl font-bold mb-6 hero-gradient-text">Database & System Tools</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link href="/admin/migrations" className="hero-hover-lift">
+              <Card className="p-4 text-center border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400">
+                <Database className="w-8 h-8 mx-auto mb-3 text-blue-600" />
+                <h4 className="font-semibold mb-2">Migrations</h4>
+                <p className="text-sm text-muted-foreground">Run database migrations</p>
+              </Card>
+            </Link>
+            <Link href="/admin/debug" className="hero-hover-lift">
+              <Card className="p-4 text-center border-2 border-red-200 dark:border-red-700 hover:border-red-400">
+                <Wrench className="w-8 h-8 mx-auto mb-3 text-red-600" />
+                <h4 className="font-semibold mb-2">Debug Tools</h4>
+                <p className="text-sm text-muted-foreground">System diagnostics</p>
+              </Card>
+            </Link>
+            <Link href="/admin/statistics" className="hero-hover-lift">
+              <Card className="p-4 text-center border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400">
+                <BarChart3 className="w-8 h-8 mx-auto mb-3 text-blue-600" />
+                <h4 className="font-semibold mb-2">Statistics</h4>
+                <p className="text-sm text-muted-foreground">System analytics</p>
+              </Card>
+            </Link>
+            <Link href="/admin/tokens" className="hero-hover-lift">
+              <Card className="p-4 text-center border-2 border-red-200 dark:border-red-700 hover:border-red-400">
+                <Coins className="w-8 h-8 mx-auto mb-3 text-red-600" />
+                <h4 className="font-semibold mb-2">Token System</h4>
+                <p className="text-sm text-muted-foreground">Manage tokens</p>
+              </Card>
+            </Link>
+          </div>
+        </Card>
+
+        {/* Quick Actions */}
+        <Card className="hero-card p-8">
+          <h3 className="text-2xl font-bold mb-6 hero-gradient-text">Quick Actions</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link href="/admin/sync-ea-stats">
+              <button className="hero-button w-full p-4">
+                <RefreshCw className="w-5 h-5 mr-2" />
+                Sync EA Stats
+              </button>
+            </Link>
+            <Link href="/admin/recalculate-standings">
+              <button className="hero-button w-full p-4">
+                <Trophy className="w-5 h-5 mr-2" />
+                Recalculate Standings
+              </button>
+            </Link>
+            <Link href="/admin/daily-recap">
+              <button className="hero-button w-full p-4">
+                <Calendar className="w-5 h-5 mr-2" />
+                Daily Recap
+              </button>
+            </Link>
+          </div>
+        </Card>
+      </div>
+    </div>
   )
 }

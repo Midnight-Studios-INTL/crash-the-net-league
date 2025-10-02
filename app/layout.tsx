@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
-import { MantineProvider } from '@/components/providers/mantine-provider'
-import { SidebarNavigation } from '@/components/layout/sidebar-navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,21 +20,13 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <MantineProvider>
-            <div className="min-h-screen bg-background">
-              {/* Main Content */}
-              <div className="mr-64">
-                {children}
-              </div>
-              
-              {/* Right Sidebar */}
-              <SidebarNavigation />
-            </div>
-          </MantineProvider>
+          <div className="min-h-screen bg-background">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
