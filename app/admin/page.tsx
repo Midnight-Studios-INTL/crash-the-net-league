@@ -80,7 +80,7 @@ export default function AdminDashboardPage() {
         {/* Admin Tools Grid */}
         <div className="hero-grid mb-12">
           {/* User Management */}
-          <div className="hero-feature-card">
+          <div className="hero-feature-card group">
             <div className="hero-feature-icon">
               <Users className="w-8 h-8 text-white" />
             </div>
@@ -99,7 +99,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* System Administration */}
-          <div className="hero-feature-card">
+          <div className="hero-feature-card group">
             <div className="hero-feature-icon">
               <Settings className="w-8 h-8 text-white" />
             </div>
@@ -118,7 +118,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* EA Sports Integration */}
-          <div className="hero-feature-card">
+          <div className="hero-feature-card group">
             <div className="hero-feature-icon">
               <GameController className="w-8 h-8 text-white" />
             </div>
@@ -137,7 +137,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Discord Integration */}
-          <div className="hero-feature-card">
+          <div className="hero-feature-card group">
             <div className="hero-feature-icon">
               <Bot className="w-8 h-8 text-white" />
             </div>
@@ -156,7 +156,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Bidding System */}
-          <div className="hero-feature-card">
+          <div className="hero-feature-card group">
             <div className="hero-feature-icon">
               <DollarSign className="w-8 h-8 text-white" />
             </div>
@@ -175,7 +175,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Content Management */}
-          <div className="hero-feature-card">
+          <div className="hero-feature-card group">
             <div className="hero-feature-icon">
               <Newspaper className="w-8 h-8 text-white" />
             </div>

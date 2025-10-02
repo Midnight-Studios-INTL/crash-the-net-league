@@ -96,7 +96,7 @@
   }
   
   .hero-feature-card {
-    @apply hero-card p-8 text-center group;
+    @apply hero-card p-8 text-center;
   }
   
   .hero-feature-icon {
