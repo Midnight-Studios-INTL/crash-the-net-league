@@ -41,9 +41,9 @@ import {
 } from "lucide-react"
 
 export default function AdminDashboardPage() {
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-blue-900/20">
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-blue-900/20">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="hero-title mb-4">Admin Dashboard</h1>
@@ -257,5 +257,6 @@ export default function AdminDashboardPage() {
     </div>
 
     <Footer />
+    </>
   )
 }
