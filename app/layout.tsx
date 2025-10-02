@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
+import { MantineProvider } from '@/components/providers/mantine-provider'
 import { SidebarNavigation } from '@/components/layout/sidebar-navigation'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -25,15 +26,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen bg-background">
-            {/* Main Content */}
-            <div className="mr-64">
-              {children}
+          <MantineProvider>
+            <div className="min-h-screen bg-background">
+              {/* Main Content */}
+              <div className="mr-64">
+                {children}
+              </div>
+              
+              {/* Right Sidebar */}
+              <SidebarNavigation />
             </div>
-            
-            {/* Right Sidebar */}
-            <SidebarNavigation />
-          </div>
+          </MantineProvider>
         </ThemeProvider>
       </body>
     </html>
